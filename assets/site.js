@@ -2,6 +2,32 @@
   var C = window.CERRAMAR || {};
   var es = document.documentElement.lang === "es";
 
+  // language picker: English and Spanish are our own pages; every other language is translated by Google
+  var LANGS = [["af", "Afrikaans"], ["sq", "Shqip"], ["am", "አማርኛ"], ["ar", "العربية"], ["hy", "Հայերեն"], ["as", "অসমীয়া"], ["ay", "Aymar"], ["az", "Azərbaycan"], ["bm", "Bamanankan"], ["eu", "Euskara"], ["be", "Беларуская"], ["bn", "বাংলা"], ["bho", "भोजपुरी"], ["bs", "Bosanski"], ["bg", "Български"], ["ca", "Català"], ["ceb", "Cebuano"], ["ny", "Chichewa"], ["zh-CN", "中文 (简体)"], ["zh-TW", "中文 (繁體)"], ["co", "Corsu"], ["hr", "Hrvatski"], ["cs", "Čeština"], ["da", "Dansk"], ["dv", "ދިވެހި"], ["doi", "डोगरी"], ["nl", "Nederlands"], ["eo", "Esperanto"], ["et", "Eesti"], ["ee", "Eʋegbe"], ["tl", "Filipino"], ["fi", "Suomi"], ["fr", "Français"], ["fy", "Frysk"], ["gl", "Galego"], ["ka", "ქართული"], ["de", "Deutsch"], ["el", "Ελληνικά"], ["gn", "Avañe’ẽ"], ["gu", "ગુજરાતી"], ["ht", "Kreyòl ayisyen"], ["ha", "Hausa"], ["haw", "ʻŌlelo Hawaiʻi"], ["iw", "עברית"], ["hi", "हिन्दी"], ["hmn", "Hmoob"], ["hu", "Magyar"], ["is", "Íslenska"], ["ig", "Igbo"], ["ilo", "Ilokano"], ["id", "Bahasa Indonesia"], ["ga", "Gaeilge"], ["it", "Italiano"], ["ja", "日本語"], ["jw", "Basa Jawa"], ["kn", "ಕನ್ನಡ"], ["kk", "Қазақ"], ["km", "ខ្មែរ"], ["rw", "Kinyarwanda"], ["gom", "कोंकणी"], ["ko", "한국어"], ["kri", "Krio"], ["ku", "Kurdî"], ["ckb", "کوردی"], ["ky", "Кыргызча"], ["lo", "ລາວ"], ["la", "Latina"], ["lv", "Latviešu"], ["ln", "Lingála"], ["lt", "Lietuvių"], ["lg", "Luganda"], ["lb", "Lëtzebuergesch"], ["mk", "Македонски"], ["mai", "मैथिली"], ["mg", "Malagasy"], ["ms", "Bahasa Melayu"], ["ml", "മലയാളം"], ["mt", "Malti"], ["mi", "Māori"], ["mr", "मराठी"], ["mni-Mtei", "ꯃꯤꯇꯩꯂꯣꯟ"], ["lus", "Mizo"], ["mn", "Монгол"], ["my", "မြန်မာ"], ["ne", "नेपाली"], ["no", "Norsk"], ["or", "ଓଡ଼ିଆ"], ["om", "Oromoo"], ["ps", "پښتو"], ["fa", "فارسی"], ["pl", "Polski"], ["pt", "Português"], ["pa", "ਪੰਜਾਬੀ"], ["qu", "Runasimi"], ["ro", "Română"], ["ru", "Русский"], ["sm", "Gagana Sāmoa"], ["sa", "संस्कृतम्"], ["gd", "Gàidhlig"], ["nso", "Sepedi"], ["sr", "Српски"], ["st", "Sesotho"], ["sn", "chiShona"], ["sd", "سنڌي"], ["si", "සිංහල"], ["sk", "Slovenčina"], ["sl", "Slovenščina"], ["so", "Soomaali"], ["su", "Basa Sunda"], ["sw", "Kiswahili"], ["sv", "Svenska"], ["tg", "Тоҷикӣ"], ["ta", "தமிழ்"], ["tt", "Татар"], ["te", "తెలుగు"], ["th", "ไทย"], ["ti", "ትግርኛ"], ["ts", "Xitsonga"], ["tr", "Türkçe"], ["tk", "Türkmen"], ["ak", "Twi"], ["uk", "Українська"], ["ur", "اردو"], ["ug", "ئۇيغۇرچە"], ["uz", "Oʻzbek"], ["vi", "Tiếng Việt"], ["cy", "Cymraeg"], ["xh", "isiXhosa"], ["yi", "ייִדיש"], ["yo", "Yorùbá"], ["zu", "isiZulu"]];
+  var sel = document.getElementById("lang-select");
+  if (sel) {
+    LANGS.forEach(function (l) { var o = document.createElement("option"); o.value = l[0]; o.textContent = l[1]; sel.appendChild(o); });
+    var onProxy = /\.translate\.goog$/.test(location.hostname);
+    var params = new URLSearchParams(location.search);
+    sel.value = onProxy ? (params.get("_x_tr_tl") || "en") : sel.getAttribute("data-current");
+    if (onProxy) {   // tell visitors this is a machine translation (Google translates this note too)
+      var note = document.createElement("p"); note.className = "lang-note";
+      note.textContent = "This page was translated automatically by Google Translate. The English version is the official one.";
+      var foot = document.querySelector("footer.site .wrap"); if (foot) foot.appendChild(note);
+    }
+    var SITE = "https://cerramarhomes.com";
+    var pagePath = function () {   // path of this page on the real site, without the Spanish folder
+      var p = location.pathname.replace(/^\/es\//, "/");
+      return p === "/es" ? "/" : p;
+    };
+    sel.addEventListener("change", function () {
+      var v = sel.value, path = pagePath();
+      if (v === "en") { location.href = SITE + path; return; }
+      if (v === "es" && (path === "/" || path === "/index.html")) { location.href = SITE + "/es/"; return; }  // our own Spanish home page
+      location.href = "https://cerramarhomes-com.translate.goog" + path + "?_x_tr_sl=en&_x_tr_tl=" + encodeURIComponent(v) + "&_x_tr_hl=" + encodeURIComponent(v) + "&_x_tr_pto=wapp";
+    });
+  }
+
   // mobile menu
   var btn = document.querySelector(".menu-btn"), nav = document.querySelector("nav.main");
   if (btn && nav) btn.addEventListener("click", function () {

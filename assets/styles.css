@@ -1,12 +1,12 @@
 /* Cerramar Realty Corp. — brand colors carried over from the original cerramarhomes.com
-   navy #02131D, sky blue #2799DA, link blue #337AB7, orange #FF9D01 */
+   navy #02131D, sky blue #2799DA, link blue #337AB7, orange #FF4001 (from the Cerramar logo) */
 :root {
   --navy: #02131d;
   --navy-2: #0b2433;
   --blue: #2799da;
   --blue-deep: #1d6fa5;
-  --orange: #ff9d01;
-  --orange-ink: #b86e00;
+  --orange: #ff4001;
+  --orange-ink: #c43100;
   --ink: #13222c;
   --muted: #5b6b76;
   --line: #dbe4ea;
@@ -43,7 +43,7 @@ section { padding-block: 76px; }
 .btn { display: inline-flex; align-items: center; gap: 8px; font: 700 1rem/1 var(--body); padding: 15px 22px; border-radius: 999px; text-decoration: none; border: 2px solid transparent; cursor: pointer; transition: transform .15s, background .15s; }
 .btn:hover { transform: translateY(-1px); }
 .btn-orange { background: var(--orange); color: var(--navy); }
-.btn-orange:hover { background: #ffb238; color: var(--navy); }
+.btn-orange:hover { background: #ff6a33; color: var(--navy); }
 .btn-blue { background: var(--blue); color: #fff; }
 .btn-blue:hover { background: var(--blue-deep); color: #fff; }
 .btn-ghost { border-color: currentColor; color: inherit; background: transparent; }
@@ -76,7 +76,7 @@ nav.main .btn { margin-left: 8px; padding: 12px 18px; color: var(--navy); }
 /* hero with the original site's orange/blue slashes */
 .hero { position: relative; overflow: hidden; background: var(--navy); color: #fff; padding-block: 92px 84px; }
 .hero::before, .hero::after { content: ""; position: absolute; top: -20%; height: 140%; transform: skewX(-24deg); pointer-events: none; }
-.hero::before { right: 6%; width: 190px; background: linear-gradient(180deg, var(--orange), #ff7a00); opacity: .95; }
+.hero::before { right: 6%; width: 190px; background: linear-gradient(180deg, var(--orange), #d93600); opacity: .95; }
 .hero::after { right: -6%; width: 260px; background: linear-gradient(180deg, var(--blue), #1758a6); }
 .hero .wrap { position: relative; z-index: 1; }
 .hero h1 { max-width: 15ch; }
@@ -180,3 +180,10 @@ footer.site ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 6p
 img.avatar { object-fit: cover; padding: 0; background: #fff; }
 .map { width: 100%; height: 260px; border: 0; border-radius: 12px; margin-top: 20px; }
 @media (max-width: 600px) { .logo-img { height: 42px; } }
+/* language picker */
+.lang-pick { display: inline-flex; align-items: center; gap: 6px; color: #fff; font-weight: 600; }
+.lang-pick svg { width: 16px; height: 16px; flex: none; }
+.lang-pick select { background: #0b2433; color: #fff; border: 1px solid #2b4656; border-radius: 6px; padding: 3px 6px; font: inherit; font-size: .85rem; max-width: 170px; }
+.lang-note { font-size: .8rem; color: #9fb3c0; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.hero .eyebrow, .page-hero .eyebrow { color: var(--orange); }
