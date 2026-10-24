@@ -78,6 +78,7 @@
 
   // Maia chat (loads from the CRM once it's online)
   if (C.CRM_URL && C.CRM_KEY) {
+    document.querySelectorAll(".ai-live").forEach(function (el) { el.hidden = false; });
     var s = document.createElement("script");
     s.src = C.CRM_URL.replace(/\/$/, "") + "/widget.js";
     s.setAttribute("data-key", C.CRM_KEY);
