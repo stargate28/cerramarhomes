@@ -10,4 +10,5 @@ window.CERRAMAR = {
   MLS_SEARCH_URL: "https://mariacerra.mfr.mlsmatrix.com/Matrix/Public/?L=1&ap=SCH",
   PHONE: "407-405-1527",
   EMAIL: "cerramarhomes@gmail.com",
+  FORM_EMAIL: "cerramarhomes@gmail.com",   // where form submissions are emailed until the CRM is online
 };

@@ -54,28 +54,46 @@
     if (a) areaNote.textContent = "Tip: in the search below, open Location and enter \"" + a + "\" as the City.";
   }
 
-  // lead forms -> CRM
+  // lead forms: go to the CRM when it's online; until then they're emailed to the office (FormSubmit)
+  var LABELS = { form: "Form", name: "Name", phone: "Phone", email: "Email", lead_type: "Interested in",
+    language: "Preferred language", message: "Message", address: "Property address", area: "Area",
+    budget: "Budget", timeline: "Timeline", consent: "OK to call/text" };
   document.querySelectorAll("form.lead-form").forEach(function (form) {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       var msg = form.querySelector(".form-msg");
       var data = {};
-      new FormData(form).forEach(function (v, k) { data[k] = v; });
+      new FormData(form).forEach(function (v, k) { data[k] = typeof v === "string" ? v.trim() : v; });
       data.consent = !!form.querySelector("input[name=consent]:checked");
       data.language = es ? "Spanish" : (data.language || "");
+      function show(text, ok) { msg.hidden = false; msg.textContent = text; msg.className = "form-msg " + (ok ? "ok" : "err"); }
       var fallback = (es ? "No pudimos enviar el formulario. Llámenos al " : "We couldn't send the form. Please call ")
         + C.PHONE + (es ? " o escriba a " : " or email ") + C.EMAIL + ".";
-      function show(text, ok) { msg.hidden = false; msg.textContent = text; msg.className = "form-msg " + (ok ? "ok" : "err"); }
-      if (!C.CRM_URL || !C.CRM_KEY) { show(fallback, false); return; }
+
+      // check the basics before sending
+      var digits = (data.phone || "").replace(/\D/g, "");
+      if (!data.name) { show(es ? "Por favor escriba su nombre." : "Please enter your name.", false); return; }
+      if (data.phone && digits.length < 10) { show(es ? "Escriba un teléfono válido de 10 dígitos." : "Please enter a valid 10-digit phone number.", false); return; }
+      if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) { show(es ? "Escriba un correo electrónico válido." : "Please enter a valid email address.", false); return; }
+      if (!data.phone && !data.email) { show(es ? "Déjenos un teléfono o correo electrónico para contactarle." : "Please give us a phone number or email so we can reach you.", false); return; }
+      if (data.website) { show(es ? "¡Gracias!" : "Thank you!", true); return; }  // bot trap
+
+      var url, body;
+      if (C.CRM_URL && C.CRM_KEY) {
+        url = C.CRM_URL.replace(/\/$/, "") + "/api/widget/" + encodeURIComponent(C.CRM_KEY) + "/lead";
+        body = data;
+      } else {
+        url = "https://formsubmit.co/ajax/" + (C.FORM_EMAIL || C.EMAIL);
+        body = { _subject: "New website lead: " + (data.form || "form") + " - " + data.name, _template: "table", _captcha: "false" };
+        if (data.email) body._replyto = data.email;
+        Object.keys(data).forEach(function (k) { if (k !== "website" && data[k] !== "") body[LABELS[k] || k] = k === "consent" ? (data[k] ? "Yes" : "No") : data[k]; });
+        body["Page"] = location.href;
+      }
       var b = form.querySelector("button[type=submit]"); b.disabled = true;
-      fetch(C.CRM_URL.replace(/\/$/, "") + "/api/widget/" + encodeURIComponent(C.CRM_KEY) + "/lead", {
-        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data)
-      }).then(function (r) {
-        if (!r.ok) throw new Error(r.status);
-        form.reset();
-        show(es ? "¡Gracias! Un agente de Cerramar se comunicará con usted pronto." :
-          "Thank you! A Cerramar agent will be in touch shortly.", true);
-      }).catch(function () { show(fallback, false); })
+      fetch(url, { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify(body) })
+        .then(function (r) { if (!r.ok) throw new Error(r.status); form.reset();
+          show(es ? "¡Gracias! Un agente de Cerramar se comunicará con usted pronto." : "Thank you! A Cerramar agent will be in touch shortly.", true); })
+        .catch(function () { show(fallback, false); })
         .then(function () { b.disabled = false; });
     });
   });
