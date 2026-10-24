@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://cerramarhomes.com/sitemap.xml
