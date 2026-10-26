@@ -268,3 +268,7 @@ img.avatar { object-fit: cover; padding: 0; background: #fff; }
 .hero-media .hv:not(.on) { transition-delay: 1.2s; }   /* the old clip stays until the new one has fully faded in */
 .hero-video h1, .hero-video .lead { text-shadow: 0 1px 2px rgba(0,0,0,.75), 0 2px 6px rgba(0,0,0,.45); }
 .hero-video .hero-note { text-shadow: 0 1px 2px rgba(0,0,0,.85); }
+
+/* "Central Florida" in the headline: royal blue (bright enough to read on the video, with a dark edge) */
+.hero h1 em { color: #3d6dff; }
+.hero-video h1 em { text-shadow: 0 1px 2px rgba(0,0,0,.8), 0 0 1px rgba(0,0,0,.6), 0 2px 8px rgba(0,0,0,.5); }
