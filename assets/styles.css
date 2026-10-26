@@ -261,3 +261,10 @@ img.avatar { object-fit: cover; padding: 0; background: #fff; }
 .hero-video .lead { color: #fff; }
 .hero-video .eyebrow { background: rgba(2,19,29,.72); }
 .hero-video .hero-note { text-shadow: 0 1px 3px rgba(0,0,0,.8); color: #fff; }
+
+/* brightest version: vivid video, no dark haze, no dark dip between clips */
+.hero-media .hv { filter: none; }   /* brightness is built into the video files */
+.hero-media .hv.on { z-index: 1; }
+.hero-media .hv:not(.on) { transition-delay: 1.2s; }   /* the old clip stays until the new one has fully faded in */
+.hero-video h1, .hero-video .lead { text-shadow: 0 1px 2px rgba(0,0,0,.75), 0 2px 6px rgba(0,0,0,.45); }
+.hero-video .hero-note { text-shadow: 0 1px 2px rgba(0,0,0,.85); }

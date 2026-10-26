@@ -153,8 +153,9 @@
       cap.style.opacity = 0; setTimeout(function () { cap.textContent = clips[i].c; cap.style.opacity = 1; }, 250);
     }
     function load(v, k) {
-      v.poster = root + clips[k].f + ".jpg";
-      if (!saveData) { v.src = root + clips[k].f + ".mp4"; v.preload = "auto"; v.load(); }
+      var ver = box.getAttribute("data-ver") ? "?v=" + box.getAttribute("data-ver") : "";
+      v.poster = root + clips[k].f + ".jpg" + ver;
+      if (!saveData) { v.src = root + clips[k].f + ".mp4" + ver; v.preload = "auto"; v.load(); }
     }
     function show(k) {
       var nextV = vids[1 - cur], curV = vids[cur];

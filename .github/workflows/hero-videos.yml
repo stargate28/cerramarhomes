@@ -16,13 +16,15 @@ jobs:
       - name: Download and compress
         run: |
           mkdir -p assets/video
+          # brighter, sunnier look: lift shadows and midtones (highlights stay unclipped) and warm up the colors
+          LOOK="curves=all='0/0 0.12/0.2 0.35/0.5 0.65/0.8 1/1',eq=saturation=1.2:contrast=1.03"
           make() {  # name url start
             curl -sSL --fail -A "Mozilla/5.0" -o /tmp/src.mp4 "$2"
             ffmpeg -y -loglevel error -ss "$3" -t 7 -i /tmp/src.mp4 -an \
-              -vf "scale=1280:720:force_original_aspect_ratio=increase,crop=1280:720,fps=30" \
+              -vf "scale=1280:720:force_original_aspect_ratio=increase,crop=1280:720,fps=30,$LOOK" \
               -c:v libx264 -profile:v high -pix_fmt yuv420p -crf 27 -preset slow -movflags +faststart "assets/video/$1.mp4"
             ffmpeg -y -loglevel error -ss "$3" -i /tmp/src.mp4 -frames:v 1 \
-              -vf "scale=1280:720:force_original_aspect_ratio=increase,crop=1280:720" -q:v 5 "assets/video/$1.jpg"
+              -vf "scale=1280:720:force_original_aspect_ratio=increase,crop=1280:720,$LOOK" -q:v 4 "assets/video/$1.jpg"
           }
           make lake-eola      https://videos.pexels.com/video-files/18469283/18469283-hd_1280_720_30fps.mp4 1
           make downtown-park  https://videos.pexels.com/video-files/31901269/13589002_1280_720_30fps.mp4 2
@@ -40,5 +42,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
           git add assets/video
-          git commit -m "Homepage videos (free clips from Pexels)" || echo "no changes"
+          git commit -m "Homepage videos (free clips from Pexels), brightened" || echo "no changes"
           git push
