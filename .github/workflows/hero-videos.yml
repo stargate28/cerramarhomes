@@ -1,0 +1,44 @@
+# Downloads the free Pexels clips for the homepage slideshow, makes small fast-loading
+# versions, and saves them to assets/video/. Runs when this file changes, or by hand.
+name: Prepare homepage videos
+on:
+  push:
+    paths: [".github/workflows/hero-videos.yml"]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  videos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - name: Download and compress
+        run: |
+          mkdir -p assets/video
+          make() {  # name url start
+            curl -sSL --fail -A "Mozilla/5.0" -o /tmp/src.mp4 "$2"
+            ffmpeg -y -loglevel error -ss "$3" -t 7 -i /tmp/src.mp4 -an \
+              -vf "scale=1280:720:force_original_aspect_ratio=increase,crop=1280:720,fps=30" \
+              -c:v libx264 -profile:v high -pix_fmt yuv420p -crf 27 -preset slow -movflags +faststart "assets/video/$1.mp4"
+            ffmpeg -y -loglevel error -ss "$3" -i /tmp/src.mp4 -frames:v 1 \
+              -vf "scale=1280:720:force_original_aspect_ratio=increase,crop=1280:720" -q:v 5 "assets/video/$1.jpg"
+          }
+          make lake-eola      https://videos.pexels.com/video-files/18469283/18469283-hd_1280_720_30fps.mp4 1
+          make downtown-park  https://videos.pexels.com/video-files/31901269/13589002_1280_720_30fps.mp4 2
+          make beach          https://videos.pexels.com/video-files/28244509/12338341_1280_720_30fps.mp4 3
+          make springs        https://videos.pexels.com/video-files/31202999/13328275_1280_720_30fps.mp4 2
+          make manatees       https://videos.pexels.com/video-files/36365298/15423277_1280_720_30fps.mp4 2
+          make trail          https://videos.pexels.com/video-files/31900947/13588361_1280_720_25fps.mp4 1
+          make shopping       https://videos.pexels.com/video-files/31059562/13273495_1280_720_30fps.mp4 1
+          make neighborhood   https://videos.pexels.com/video-files/38897555/16539124_1280_720_60fps.mp4 3
+          make homes          https://videos.pexels.com/video-files/33839916/14360942_1280_720_30fps.mp4 2
+          make lake-homes     https://videos.pexels.com/video-files/17883695/17883695-hd_1280_720_30fps.mp4 3
+          ls -la assets/video
+      - name: Save
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add assets/video
+          git commit -m "Homepage videos (free clips from Pexels)" || echo "no changes"
+          git push
