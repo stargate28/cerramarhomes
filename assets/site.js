@@ -78,20 +78,26 @@
       if (!data.phone && !data.email) { show(es ? "Déjenos un teléfono o correo electrónico para contactarle." : "Please give us a phone number or email so we can reach you.", false); return; }
       if (data.website) { show(es ? "¡Gracias!" : "Thank you!", true); return; }  // bot trap
 
-      var url, body;
+      // email copy for the office (also the backup if the CRM can't be reached)
+      var mail = { _subject: "New website lead: " + (data.form || "form") + " - " + data.name, _template: "table", _captcha: "false" };
+      if (data.email) mail._replyto = data.email;
+      Object.keys(data).forEach(function (k) { if (k !== "website" && data[k] !== "") mail[LABELS[k] || k] = k === "consent" ? (data[k] ? "Yes" : "No") : data[k]; });
+      mail["Page"] = location.href;
+      var post = function (url, body) {
+        return fetch(url, { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify(body) })
+          .then(function (r) { if (!r.ok) throw new Error(r.status); return r; });
+      };
+      var sendMail = function () { return post("https://formsubmit.co/ajax/" + (C.FORM_EMAIL || C.EMAIL), mail); };
+      var send;
       if (C.CRM_URL && C.CRM_KEY) {
-        url = C.CRM_URL.replace(/\/$/, "") + "/api/widget/" + encodeURIComponent(C.CRM_KEY) + "/lead";
-        body = data;
+        var crm = post(C.CRM_URL.replace(/\/$/, "") + "/api/widget/" + encodeURIComponent(C.CRM_KEY) + "/lead", data);
+        var em = sendMail();
+        send = crm.catch(function () { return em; });   // succeed if either one gets through
       } else {
-        url = "https://formsubmit.co/ajax/" + (C.FORM_EMAIL || C.EMAIL);
-        body = { _subject: "New website lead: " + (data.form || "form") + " - " + data.name, _template: "table", _captcha: "false" };
-        if (data.email) body._replyto = data.email;
-        Object.keys(data).forEach(function (k) { if (k !== "website" && data[k] !== "") body[LABELS[k] || k] = k === "consent" ? (data[k] ? "Yes" : "No") : data[k]; });
-        body["Page"] = location.href;
+        send = sendMail();
       }
       var b = form.querySelector("button[type=submit]"); b.disabled = true;
-      fetch(url, { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify(body) })
-        .then(function (r) { if (!r.ok) throw new Error(r.status); form.reset();
+      send.then(function () { form.reset();
           show(es ? "¡Gracias! Un agente de Cerramar se comunicará con usted pronto." : "Thank you! A Cerramar agent will be in touch shortly.", true); })
         .catch(function () { show(fallback, false); })
         .then(function () { b.disabled = false; });
@@ -123,6 +129,7 @@
   // Maia chat (loads from the CRM once it's online)
   if (C.CRM_URL && C.CRM_KEY) {
     document.querySelectorAll(".ai-live").forEach(function (el) { el.hidden = false; });
+    if (C.PHONE_AI) document.querySelectorAll(".ai-phone").forEach(function (el) { el.hidden = false; });
     var s = document.createElement("script");
     s.src = C.CRM_URL.replace(/\/$/, "") + "/widget.js";
     s.setAttribute("data-key", C.CRM_KEY);
