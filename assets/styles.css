@@ -253,3 +253,11 @@ img.avatar { object-fit: cover; padding: 0; background: #fff; }
 /* top-of-page labels (e.g. "Cerramar Realty Corp. · Central Florida") in royal blue */
 .hero .eyebrow, .page-hero .eyebrow { color: var(--royal-light); }
 .hero-video .eyebrow { display: inline-block; background: rgba(2,19,29,.6); padding: 7px 11px; border-radius: 6px; text-shadow: none; font-size: .82rem; color: #7d9fff; }
+
+/* homepage videos shown as-is: no dark overlay or color filter; text stays readable with its own shadow */
+.hero-shade { display: none; }
+.hero-media .hv { filter: none; }
+.hero-video h1, .hero-video .lead { text-shadow: 0 1px 2px rgba(0,0,0,.7), 0 2px 10px rgba(0,0,0,.6), 0 0 28px rgba(0,0,0,.45); }
+.hero-video .lead { color: #fff; }
+.hero-video .eyebrow { background: rgba(2,19,29,.72); }
+.hero-video .hero-note { text-shadow: 0 1px 3px rgba(0,0,0,.8); color: #fff; }
