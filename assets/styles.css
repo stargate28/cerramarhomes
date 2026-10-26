@@ -197,14 +197,14 @@ img.avatar { object-fit: cover; padding: 0; background: #fff; }
 .hero-shade { position: absolute; inset: 0; background:
   linear-gradient(90deg, rgba(2,19,29,.86) 0%, rgba(2,19,29,.62) 45%, rgba(2,19,29,.18) 100%),
   linear-gradient(0deg, rgba(2,19,29,.55) 0%, rgba(2,19,29,0) 35%); }
-.hero-video .wrap { z-index: 2; }
+.hero-video .wrap { z-index: 2; width: 100%; }
 .hero-video h1, .hero-video .lead { text-shadow: 0 2px 18px rgba(0,0,0,.35); }
 .hero-caption { position: absolute; z-index: 2; right: 24px; bottom: 22px; display: flex; align-items: center; gap: 12px;
   background: rgba(2,19,29,.55); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,.18); color: #fff;
   border-radius: 999px; padding: 8px 10px 8px 16px; font: 600 .9rem var(--body); max-width: calc(100% - 48px); }
 .hero-caption .hc-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: opacity .4s; }
 .hero-dots { display: flex; gap: 5px; }
-.hero-dots i { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,.4); transition: background .3s, transform .3s; }
+.hero-dots i { display: block; width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,.4); transition: background .3s, transform .3s; }
 .hero-dots i.on { background: var(--orange); transform: scale(1.25); }
 .hero-pause { width: 30px; height: 30px; border-radius: 50%; border: 1px solid rgba(255,255,255,.35); background: transparent; color: #fff;
   font-size: .7rem; cursor: pointer; flex: none; }
