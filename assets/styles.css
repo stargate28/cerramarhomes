@@ -6,6 +6,8 @@
   --blue: #2799da;
   --blue-deep: #1d6fa5;
   --orange: #ff4001;
+  --royal: #2456d6;        /* royal blue: buttons with white text */
+  --royal-light: #6b93ff;  /* royal blue that reads on the dark navy */
   --orange-ink: #c43100;
   --ink: #13222c;
   --muted: #5b6b76;
@@ -64,7 +66,8 @@ header.site .wrap { display: flex; align-items: center; gap: 24px; min-height: 7
 nav.main { display: flex; gap: 2px; align-items: center; }
 nav.main a { text-decoration: none; color: var(--ink); font-weight: 600; padding: 10px 11px; border-radius: 8px; font-size: .97rem; }
 nav.main a:hover, nav.main a[aria-current="page"] { color: var(--blue-deep); background: var(--mist); }
-nav.main .btn { margin-left: 8px; padding: 12px 18px; color: var(--navy); }
+nav.main .btn { margin-left: 8px; padding: 12px 18px; background: var(--royal); color: #fff; }
+nav.main .btn:hover { background: #1a44b3; color: #fff; }
 .menu-btn { display: none; background: none; border: 1px solid var(--line); border-radius: 8px; padding: 9px 12px; font: 700 .95rem var(--body); color: var(--navy); cursor: pointer; }
 @media (max-width: 1020px) {
   .menu-btn { display: block; }
@@ -195,10 +198,12 @@ img.avatar { object-fit: cover; padding: 0; background: #fff; }
 .hero-media .hv { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.2s ease; }
 .hero-media .hv.on { opacity: 1; }
 .hero-shade { position: absolute; inset: 0; background:
-  linear-gradient(90deg, rgba(2,19,29,.86) 0%, rgba(2,19,29,.62) 45%, rgba(2,19,29,.18) 100%),
-  linear-gradient(0deg, rgba(2,19,29,.55) 0%, rgba(2,19,29,0) 35%); }
+  linear-gradient(90deg, rgba(2,19,29,.62) 0%, rgba(2,19,29,.34) 45%, rgba(2,19,29,0) 100%),
+  linear-gradient(0deg, rgba(2,19,29,.35) 0%, rgba(2,19,29,0) 30%); }
+.hero-media .hv { filter: brightness(1.12) saturate(1.08); }
 .hero-video .wrap { z-index: 2; width: 100%; }
-.hero-video h1, .hero-video .lead { text-shadow: 0 2px 18px rgba(0,0,0,.35); }
+.hero-video h1, .hero-video .lead, .hero-video .eyebrow { text-shadow: 0 1px 3px rgba(0,0,0,.45), 0 2px 22px rgba(0,0,0,.45); }
+.hero-video .lead { color: #e6eef3; }
 .hero-caption { position: absolute; z-index: 2; right: 24px; bottom: 22px; display: flex; align-items: center; gap: 12px;
   background: rgba(2,19,29,.55); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,.18); color: #fff;
   border-radius: 999px; padding: 8px 10px 8px 16px; font: 600 .9rem var(--body); max-width: calc(100% - 48px); }
@@ -213,7 +218,7 @@ img.avatar { object-fit: cover; padding: 0; background: #fff; }
   width: auto; background: linear-gradient(90deg, var(--orange) 0 55%, var(--blue) 55% 100%); z-index: 2; }
 @media (max-width: 720px) {
   .hero-video { min-height: 0; padding-block: 72px 96px; }
-  .hero-shade { background: linear-gradient(0deg, rgba(2,19,29,.9) 0%, rgba(2,19,29,.6) 60%, rgba(2,19,29,.45) 100%); }
+  .hero-shade { background: linear-gradient(0deg, rgba(2,19,29,.78) 0%, rgba(2,19,29,.45) 60%, rgba(2,19,29,.25) 100%); }
   .hero-caption { left: 16px; right: 16px; bottom: 16px; justify-content: space-between; }
   .hero-dots { display: none; }
 }
@@ -244,3 +249,7 @@ img.avatar { object-fit: cover; padding: 0; background: #fff; }
 .hv-next { margin-top: 16px; padding: 14px 16px; background: #fff6f2; border-radius: 10px; font-size: .95rem; }
 .hv-fine { font-size: .8rem; color: var(--muted); margin-top: 14px; }
 @media (max-width: 640px) { .row3 { grid-template-columns: 1fr 1fr; } .row3 label:last-child { grid-column: 1 / -1; } }
+
+/* top-of-page labels (e.g. "Cerramar Realty Corp. · Central Florida") in royal blue */
+.hero .eyebrow, .page-hero .eyebrow { color: var(--royal-light); }
+.hero-video .eyebrow { display: inline-block; background: rgba(2,19,29,.6); padding: 7px 11px; border-radius: 6px; text-shadow: none; font-size: .82rem; color: #7d9fff; }
