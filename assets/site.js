@@ -137,5 +137,55 @@
     s.defer = true;
     document.body.appendChild(s);
   }
+
+  // ---- welcome slideshow: scenic clips that cross-fade behind the homepage headline ----
+  (function () {
+    var box = document.querySelector(".hero-media"); if (!box) return;
+    var clips = []; try { clips = JSON.parse(box.getAttribute("data-clips")); } catch (e) { return; }
+    var root = box.getAttribute("data-root"), vids = box.querySelectorAll(".hv"), cap = box.querySelector(".hc-text");
+    var dots = box.querySelector(".hero-dots"), btn = box.querySelector(".hero-pause");
+    var still = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var saveData = navigator.connection && navigator.connection.saveData;
+    var i = 0, cur = 0, paused = still, timer = null;
+    clips.forEach(function () { dots.appendChild(document.createElement("i")); });
+    function mark() {
+      [].forEach.call(dots.children, function (d, k) { d.className = k === i ? "on" : ""; });
+      cap.style.opacity = 0; setTimeout(function () { cap.textContent = clips[i].c; cap.style.opacity = 1; }, 250);
+    }
+    function load(v, k) {
+      v.poster = root + clips[k].f + ".jpg";
+      if (!saveData) { v.src = root + clips[k].f + ".mp4"; v.preload = "auto"; v.load(); }
+    }
+    function show(k) {
+      var nextV = vids[1 - cur], curV = vids[cur];
+      i = k; load(nextV, k);
+      var go = function () {
+        nextV.classList.add("on"); curV.classList.remove("on"); cur = 1 - cur; mark();
+        if (!saveData && !paused) { var p = nextV.play(); if (p && p.catch) p.catch(function () {}); }
+        setTimeout(function () { try { curV.pause(); } catch (e) {} }, 1300);
+      };
+      if (saveData || nextV.readyState >= 2) go();
+      else { var done = false; var once = function () { if (!done) { done = true; go(); } };
+        nextV.addEventListener("loadeddata", once, { once: true }); setTimeout(once, 2500); }
+    }
+    function schedule() { clearTimeout(timer); if (!paused) timer = setTimeout(function () { show((i + 1) % clips.length); schedule(); }, 6800); }
+    // first clip
+    load(vids[0], 0); mark();
+    if (!saveData && !still) { var p0 = vids[0].play(); if (p0 && p0.catch) p0.catch(function () {}); }
+    schedule();
+    btn.addEventListener("click", function () {
+      paused = !paused;
+      btn.textContent = paused ? "▶" : "❚❚";
+      btn.setAttribute("aria-label", box.getAttribute(paused ? "data-play" : "data-pause"));
+      var v = vids[cur];
+      if (paused) { try { v.pause(); } catch (e) {} clearTimeout(timer); }
+      else { var p = v.play(); if (p && p.catch) p.catch(function () {}); schedule(); }
+    });
+    if (still) { btn.textContent = "▶"; btn.setAttribute("aria-label", box.getAttribute("data-play")); }
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) { clearTimeout(timer); try { vids[cur].pause(); } catch (e) {} }
+      else if (!paused) { var p = vids[cur].play(); if (p && p.catch) p.catch(function () {}); schedule(); }
+    });
+  })();
   var y = document.querySelector("[data-year]"); if (y) y.textContent = new Date().getFullYear();
 })();
