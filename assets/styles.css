@@ -218,3 +218,29 @@ img.avatar { object-fit: cover; padding: 0; background: #fff; }
   .hero-dots { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .hero-media .hv { transition: none; } }
+
+/* ---- home value calculator ---- */
+.row3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.hv-addr { position: relative; }
+.hv-suggest { position: absolute; z-index: 20; left: 0; right: 0; top: 100%; margin: 4px 0 0; padding: 4px; list-style: none; background: #fff; border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 12px 30px rgba(2,19,29,.14); max-height: 300px; overflow: auto; }
+.hv-suggest li { padding: 9px 10px; border-radius: 7px; cursor: pointer; font-size: .95rem; }
+.hv-suggest li span { color: var(--muted); font-size: .82rem; margin-left: 6px; }
+.hv-suggest li:hover, .hv-suggest li.on { background: var(--mist, #eef4f7); }
+.hv-where { margin: 6px 0 0; font-weight: 700; color: var(--navy); }
+.hv-result { border-top: 5px solid var(--orange); margin-bottom: 22px; scroll-margin-top: 110px; }
+.hv-label { margin: 0; color: var(--muted); font-weight: 600; }
+.hv-value { margin: 4px 0 2px; font: 800 clamp(2.2rem, 6vw, 3.1rem)/1.1 var(--display); color: var(--navy); }
+.hv-range { margin: 0 0 8px; }
+.hv-conf { display: inline-block; margin-left: 6px; padding: 2px 10px; border-radius: 99px; font-size: .8rem; font-weight: 700; background: #eef4f7; color: var(--navy); }
+.hv-high { background: #dcf3e4; color: #135c2f; } .hv-medium { background: #fff1d6; color: #7a4b00; } .hv-low { background: #fde4dc; color: #8a2a0b; }
+.hv-facts { color: var(--muted); margin: 0 0 10px; font-size: .95rem; }
+.hv-market { margin: 0 0 14px; padding-left: 18px; font-size: .95rem; }
+.hv-result h3 { margin: 16px 0 8px; font-size: 1.05rem; }
+.hv-table { overflow-x: auto; }
+.hv-table table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.hv-table th, .hv-table td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.hv-table td:first-child { white-space: normal; min-width: 170px; }
+.hv-table .tag { display: inline-block; font-size: .72rem; padding: 1px 7px; border-radius: 99px; background: #eef4f7; color: var(--muted); }
+.hv-next { margin-top: 16px; padding: 14px 16px; background: #fff6f2; border-radius: 10px; font-size: .95rem; }
+.hv-fine { font-size: .8rem; color: var(--muted); margin-top: 14px; }
+@media (max-width: 640px) { .row3 { grid-template-columns: 1fr 1fr; } .row3 label:last-child { grid-column: 1 / -1; } }
